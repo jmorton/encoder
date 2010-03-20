@@ -47,13 +47,13 @@ module Encoder
         value ||= arg if namespace.constants.find { |c| arg.downcase == namespace.const_get(c).downcase }          
         
         # Set the value to whatever we found, possibly nil
-        self.instance_variable_set("@#{attribute_name}", value)
+        self.write_attribute(attribute_name, value)
       end
   
       # create getter for attribute
       self.send(:define_method, attribute_name) do
       
-        encoded_attribute = self.instance_variable_get("@#{attribute_name}")
+        encoded_attribute = self.read_attribute(attribute_name)
         
         namespace = self.class.const_get(attribute_name.to_s.camelcase)
       

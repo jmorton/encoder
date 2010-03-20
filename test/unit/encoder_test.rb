@@ -1,5 +1,4 @@
-require File.expand_path(File.join(File.dirname(__FILE__), 'test_helper'))
-require File.dirname(__FILE__) + '/database'
+require File.expand_path(File.join(File.dirname(__FILE__), '../test_helper'))
 
 class EncoderTest < ActiveSupport::TestCase
   
