@@ -1,0 +1,37 @@
+Encode
+=========
+
+Encode makes it easy to go from codes to meaningful strings.
+
+Example
+=======
+
+Suppose you have a task in one of three possible states: pending, active, finished.  When you store tasks, you'd like to have the state represented as P for pending, A for active, and F, for finished.  However, you don't want to worry about the details of turning a state into a specific character.
+
+t = Task.new('feed the cat')
+
+# By default 
+t.status = Status::Pending
+t.status         # => 'P'
+t.status.decode  # => 'Pending'
+
+# You'd probably encapsulate this in a method though wouldn't you?
+t.finish!
+
+# How should that be implemented though?
+@status = 'f'
+@status = 'finished'
+@status = Task::Status::Finished
+
+However, you want to store the state as a single character behind the scenes without having to define a bunch of custom getters or setters. 
+
+class Task
+	code :status do
+	  Status::Pending = "P" 
+	  Status::Active = "A"
+	  Status::Finished = "F"
+	end
+end
+
+
+Copyright (c) 2010 Jon Morton, released under the MIT license
