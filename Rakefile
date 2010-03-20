@@ -32,6 +32,8 @@ begin
     gemspec.homepage = "http://github.com/jmorton/encoder"
     gemspec.authors = ["Jon Morton"]
   end
+  Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler not available. Install it with: gem install jeweler"
 end
+
