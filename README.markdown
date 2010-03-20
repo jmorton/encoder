@@ -23,10 +23,39 @@ It also simplifies using constants to define encoded values and descriptions.
 ## Using Encoder
 
 ### Setup
-<script src="http://gist.github.com/338782.js?file=setup"></script>
+    class Task < ActiveRecord::Base
+      include Encoder
+  
+      code :status do
+        Status::New      = "N"
+        Status::Pending  = "P"
+        Status::Finished = "F"
+        Status::OverDue  = "O"
+      end
+  
+      code :priority do
+        Priority::High =  1
+        Priority::Low =   5
+      end
+  
+    end
 
 ### Usage Examples
-<script src="http://gist.github.com/338782.js?file=usage"></script>
+    t = Task.new # => #<Task id: nil, status: nil, priority: nil>
+
+    # Using a constant to assign the value
+    t.status = Task::Status::New # => "N"
+    t.status # => "N"
+    t.status.decode # => "New"
+
+    # Using a decoded value to assign the value
+    t.priority = 'high' # => "high"
+    t.priority # => "H"
+    t.priority.decode # => "High"
+
+    # Obtaining a list of the constant names defined for each attribute
+    Task::Status.constants # => ["Pending", "New", "OverDue", "Finished"]
+    Task::Priority.constants # => ["Low", "High"]
 
 ## To Do
 
