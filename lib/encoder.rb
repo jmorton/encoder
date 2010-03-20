@@ -47,7 +47,7 @@ module Encoder
         # Since the given value might not match the constant name exactly
         # (because of case sensitivity or white space variations) we
         # normalize it a bit.
-        normalized = arg.gsub(/\s+/,'').downcase
+        normalized = arg && arg.gsub(/\s+/,'').downcase
         
         # Now we look for a constant whose name or actual value match the
         # normalized argument.  We 'tap' whatever constant name is found

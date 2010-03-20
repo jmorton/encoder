@@ -47,6 +47,11 @@ class EncoderTest < ActiveSupport::TestCase
     assert task.status.decode == 'Over Due'
   end
   
+  test "setting an encoded attribute to nil" do
+    task = ::Task.new
+    task.status = nil
+    assert task.status == nil
+  end
   
   test "a code's attribute name corresponds to a camelcased namespace" do
     task = ::Task.new
