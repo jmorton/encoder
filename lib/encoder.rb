@@ -37,17 +37,30 @@ module Encoder
       # create setter for attribute
       self.send(:define_method, "#{attribute_name}=") do |arg|
         
-        # Find the encoded value for the specified value
+        # At the end of this method, the underlying attribute will be set
+        # to the value of this variable.
+        encoded_value = nil
+        
+        # Retrieve the module where the constants for this attribute are defined.
         namespace = self.class.const_get(attribute_name.to_s.camelcase)
         
-        # If the arg is a constant name...
-        value = namespace.const_defined?(arg) ? namespace.const_get(arg) : nil
+        # Since the given value might not match the constant name exactly
+        # (because of case sensitivity or white space variations) we
+        # normalize it a bit.
+        normalized = arg.gsub(/\s+/,'').downcase
         
-        # If the arg is already an encoded value...
-        value ||= arg if namespace.constants.find { |c| arg.downcase == namespace.const_get(c).downcase }          
+        # Now we look for a constant whose name or actual value match the
+        # normalized argument.  We 'tap' whatever constant name is found
+        # and lookup the actual value.
+        namespace.constants.find do |const_name|
+          normalized == const_name.downcase ||
+          normalized == namespace.const_get(const_name).downcase
+        end.tap do |match|
+          encoded_value = namespace.const_get(match) if match
+        end
         
         # Set the value to whatever we found, possibly nil
-        self.write_attribute(attribute_name, value)
+        self.write_attribute(attribute_name, encoded_value)
       end
   
       # create getter for attribute
@@ -65,7 +78,7 @@ module Encoder
       
         class << encoded_attribute
           def decode
-            @decoding
+            @decoding && @decoding.underscore.titleize
           end
         end
       

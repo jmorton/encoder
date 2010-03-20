@@ -27,6 +27,27 @@ class EncoderTest < ActiveSupport::TestCase
     assert task.status.decode == 'New'
   end
   
+  test "encoding a description ignores caps" do
+    task = ::Task.new
+    task.status = 'new'
+    assert task.status == Task::Status::New
+    task.status = 'NEW'
+    assert task.status == Task::Status::New
+  end
+  
+  test "encoding a multiword description" do
+    task = ::Task.new
+    task.status = 'over due'
+    assert task.status == Task::Status::OverDue
+  end
+  
+  test "decoding a multiword description" do
+    task = ::Task.new
+    task.status = Task::Status::OverDue
+    assert task.status.decode == 'Over Due'
+  end
+  
+  
   test "a code's attribute name corresponds to a camelcased namespace" do
     task = ::Task.new
     

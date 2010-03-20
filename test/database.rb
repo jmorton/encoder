@@ -25,6 +25,7 @@ class Task < ActiveRecord::Base
 	  Status::New      = "N"
 	  Status::Pending  = "P"
 	  Status::Finished = "F"
+	  Status::OverDue  = "O"
 	end
 	
 	code :priority do
@@ -33,5 +34,3 @@ class Task < ActiveRecord::Base
   end
 	
 end
-
-puts 'ahoy!!'
