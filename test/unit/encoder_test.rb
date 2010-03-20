@@ -21,6 +21,12 @@ class EncoderTest < ActiveSupport::TestCase
     assert task.status == nil
   end
   
+  test "decoding an attribute should match the constant name" do
+    task = ::Task.new
+    task.status = Task::Status::New
+    assert task.status.decode == 'New'
+  end
+  
   test "a code's attribute name corresponds to a camelcased namespace" do
     task = ::Task.new
     

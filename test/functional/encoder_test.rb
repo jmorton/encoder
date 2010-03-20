@@ -18,6 +18,7 @@ class EncoderTest < ActiveSupport::TestCase
     
     db_task = ::Task.first
     assert db_task.status == 'N'
+    assert db_task.status.decode == 'New'
   end
   
 end

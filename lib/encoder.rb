@@ -38,7 +38,7 @@ module Encoder
       self.send(:define_method, "#{attribute_name}=") do |arg|
         
         # Find the encoded value for the specified value
-        namespace = self.class.const_get(attribute_name.to_s.capitalize)
+        namespace = self.class.const_get(attribute_name.to_s.camelcase)
         
         # If the arg is a constant name...
         value = namespace.const_defined?(arg) ? namespace.const_get(arg) : nil
@@ -64,7 +64,7 @@ module Encoder
         encoded_attribute.instance_variable_set(:@decoding, decoded_value)
       
         class << encoded_attribute
-          def decoding
+          def decode
             @decoding
           end
         end
