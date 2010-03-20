@@ -29,7 +29,7 @@ module Encoder
     def code(attribute_name, &block)
       
       # Create a 'namespace' for constants 
-      const_set(attribute_name.to_s.capitalize, Module.new)
+      const_set(attribute_name.to_s.camelcase, Module.new)
       
       # Expecting constants to be assigned values.
       yield
@@ -55,7 +55,7 @@ module Encoder
       
         encoded_attribute = self.instance_variable_get("@#{attribute_name}")
         
-        namespace = self.class.const_get(attribute_name.to_s.capitalize)
+        namespace = self.class.const_get(attribute_name.to_s.camelcase)
       
         decoded_value = namespace.constants.select do |constant|
           namespace.const_get(constant) == encoded_attribute

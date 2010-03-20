@@ -33,5 +33,14 @@ class Task
 	end
 end
 
+To Do
+=====
+
+[ ] Read/write model attributes
+[ ] Camelcase namespace (:foo_bar to FooBar instead of :foo_bar to Foo_bar)
+[ ] Auto-mixin on init
+[ ] Make a proper gem
+[ ] Choose a better name
+[ ] Use shoulda or rspec (maybe)
 
 Copyright (c) 2010 Jon Morton, released under the MIT license

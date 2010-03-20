@@ -1,4 +1,4 @@
 # desc "Explaining what the task does"
-# task :transcode do
+# task :encoder do
 #   # Task goes here
 # end
