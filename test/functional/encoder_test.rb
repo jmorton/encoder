@@ -21,4 +21,14 @@ class EncoderTest < ActiveSupport::TestCase
     assert db_task.status.decode == 'New'
   end
   
+  test "setting an attribute using mass assignment should encode a decoded value" do
+    task = ::Task.new({ :status => 'New' })
+    assert task.status == 'N'
+  end
+  
+  test "setting an attribute using mass assignment should ignore a value" do
+    task = ::Task.new({ :status => 'Nothing Matches This' })
+    assert task.status == nil
+  end
+  
 end
