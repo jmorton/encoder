@@ -1,3 +1,9 @@
+# Adding decode to all objects simplifies the complexity of handling
+# Fixnums with decodable values.
+class Object
+  attr_accessor :decode
+end
+
 module Encoder
   
   def self.included(base)
@@ -29,10 +35,24 @@ module Encoder
     def code(attribute_name, &block)
       
       # Create a 'namespace' for constants 
-      const_set(attribute_name.to_s.camelcase, Module.new)
+      namespace = const_set(attribute_name.to_s.camelcase, Module.new)
       
       # Expecting constants to be assigned values.
       yield
+      
+      # Add methods for obtaining namespaced constants and their values.
+      namespace.module_eval do
+        def self.values
+          constants.map { |c| self.const_get(c) }
+        end
+        def self.mapping
+          constants.inject(Hash.new) do |memo, const|
+            memo[const] = self.const_get(const)
+            memo
+          end
+        end
+      end
+      
       
       # create setter for attribute
       self.send(:define_method, "#{attribute_name}=") do |arg|
@@ -47,14 +67,14 @@ module Encoder
         # Since the given value might not match the constant name exactly
         # (because of case sensitivity or white space variations) we
         # normalize it a bit.
-        normalized = arg && arg.gsub(/\s+/,'').downcase
+        normalized = arg && arg.to_s.gsub(/\s+/,'').downcase
         
         # Now we look for a constant whose name or actual value match the
         # normalized argument.  We 'tap' whatever constant name is found
         # and lookup the actual value.
         namespace.constants.find do |const_name|
-          normalized == const_name.downcase ||
-          normalized == namespace.const_get(const_name).downcase
+          normalized == const_name.to_s.downcase ||
+          normalized == namespace.const_get(const_name).to_s.downcase
         end.tap do |match|
           encoded_value = namespace.const_get(match) if match
         end
@@ -74,12 +94,12 @@ module Encoder
           namespace.const_get(constant) == encoded_attribute
         end.first
       
-        encoded_attribute.instance_variable_set(:@decoding, decoded_value)
-      
-        class << encoded_attribute
-          def decode
-            @decoding && @decoding.underscore.titleize
-          end
+        if decoded_value.is_a?(Fixnum)
+          encoded_attribute.instance_variable_set(:@decode, decoded_value)
+        elsif ! decoded_value.nil?
+          encoded_attribute.instance_variable_set(:@decode, decoded_value.underscore.titleize)
+        else
+          encoded_attribute.instance_variable_set(:@decode, nil)
         end
       
         return encoded_attribute

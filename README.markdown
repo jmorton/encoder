@@ -49,13 +49,16 @@ It also simplifies using constants to define encoded values and descriptions.
     t.status.decode # => "New"
 
     # Using a decoded value to assign the value
-    t.priority = 'high' # => "high"
-    t.priority # => "H"
+    t.priority = 1 # => 1
+    t.priority # => 1
     t.priority.decode # => "High"
 
     # Obtaining a list of the constant names defined for each attribute
     Task::Status.constants # => ["Pending", "New", "OverDue", "Finished"]
     Task::Priority.constants # => ["Low", "High"]
+    Task::Priority.values # => [5, 1]
+    Task::Priority.mapping # => { "Low" => 5, "High" => 1 }
+    
 
 ## To Do
 

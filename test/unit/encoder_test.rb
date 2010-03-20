@@ -66,4 +66,25 @@ class EncoderTest < ActiveSupport::TestCase
     assert Task.const_defined?(:FooBar)
   end
   
+  test "constants with fixnum values" do
+    t = ::Task.new
+    t.priority = 1
+    assert t.priority == Task::Priority::High
+  end
+
+  test "namespaced constants" do
+    assert Task::Priority.constants.all? { |v| ["High", "Low"].include?(v) }
+  end
+  
+  test "namespaced values" do
+    assert Task::Priority.values.all? { |v| [1,5].include?(v) }
+  end
+  
+  test "namespaced mapping" do
+    assert Task::Priority.mapping == {
+      "High" => 1,
+      "Low" => 5
+    }
+  end
+  
 end

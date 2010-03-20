@@ -29,8 +29,8 @@ class Task < ActiveRecord::Base
 	end
 	
 	code :priority do
-	  Priority::High =  "H"
-	  Priority::Low =   "L"
+	  Priority::High =  1
+	  Priority::Low =   5
   end
 	
 end
